@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>BCSE102-SEM2 Assignment 1 Iteration 1</title>
+    <script src="src/SetExtensions.js"></script>
+    <script src="src/View.js"></script>
+    <script src="src/Team.js"></script>
+    <script src="src/Match.js"></script>
+    <script src="src/Pool.js"></script>
+    <script src="src/Sport.js"></script>
+    <script src="src/Tournament.js"></script>
+    <script src="src/Controller.js"></script>
+    <script src="src/PoolResults.js"></script>
+    <script src="src/shortNames.js"></script>
+    <link rel="stylesheet" href="layout.css">
+  </head>
+  <body>
+    <div id="divDisplay"></div>
+    <script>
+    var the2018Games // GLOBAL FOR DEBUGGING
+      var go = function () {
+        the2018Games = Controller.setup()
+        let theDisplay = document.getElementById( 'divDisplay')
+        addPoolResults(the2018Games)
+        addShortNames(the2018Games)
+        theDisplay.innerHTML = ""
+        theDisplay.appendChild(the2018Games.getAll())
+        console.log( the2018Games ) 
+      }
+      window.onload = go;
+    </script> 
+  </body> 
+</html>

@@ -1,0 +1,36 @@
+body {
+    display: block;
+    margin: 0;
+    font-family: tahoma, sans-serif;
+}
+
+main, section, article, div {
+    justify-content: center;
+    margin: 1rem;
+    padding: 1rem;
+}
+
+#divDisplay {
+    padding: 0;
+    background-color: none;
+}
+
+main {
+    
+}
+
+section {
+    
+}
+
+article {
+    
+}
+
+table {
+    
+}
+
+.empty {
+    background-color: rgba(0, 0, 0, 0.1);
+}
