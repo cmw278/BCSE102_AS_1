@@ -1,9 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Additional scripts and page title will go here -->
+    <meta charset="utf-8" content="Tournament API documentation and demo">
+    <title>Need Help?</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="layout.css">
   </head>
   <body>
-  <!-- usage documentation, inline scripts and test form will go here -->
+    <header>
+      <img id="ascii" src="ServerFrankHeader.svg">
+      <div id="current-time"></div>
+    </header>
+    <main>
+      
+      <h1>Your source for the 2018 Commonwealth Games</h1>
+      
+      <article>
+        
+        <h2>How to use this page</h2>
+        
+        <section>
+          <p>This page responds dynamically to the request sent to it.</p>
+          
+          <p>In order to request database information, you must send a <code>POST</code> request to the full url of this page: <a href="https://ubilamp.hopto.org/index.php"><code>https://ubilamp.hopto.org/index.php</code></a></p>
+          
+          <p>The <code>POST</code> request must have a payload that includes an <code>option</code> tag that specifies which data-set you'd like to receive.<br>eg. <code>{ option: <em>tableName</em> }</code> WHERE <code><em>tableName</em> === [sports || matches || poolResults]</code></p>
+          
+          <p>For the matches and poolResults data-sets, you may also like to include a <code>sport</code> tag that specifies the target sport.<br>eg. <code>{ sport: <em>sportName</em> }</code> WHERE <code><em>sportName</em></code> is the name of a target sport</p>
+          
+          <p>On request, this page will resolve to a <code>JSON</code> string, containing an array of rows from the selected data-set. If the request is not formatted properly you will instead receive a <code>JSON</code> string containing details about the error</p>
+          
+          <p>If there is an error with your request, you will receive an array with three <code>key: <em>value</em></code> pairs: <code>error</code>, <code>received</code>, and <code>advice</code></p>
+          
+          <div class="code">JSON {<br>
+          &nbsp;&nbsp;error: "<em>Oops... something went wrong with your request</em>",<br>
+          &nbsp;&nbsp;received: "<em>Some text here...</em>",<br>
+          &nbsp;&nbsp;advice: "<em>Some advice here...</em>"<br>
+          }</div>
+          
+          <p>The value of <code>error</code> is one of two pre-defined error messages.</p>
+          
+          <p>The value of <code>received</code> is an echo of the request the server received.</p>
+          
+          <p>Finally, the value of <code>advice</code> will be a hint as to what has actually gone wrong.</p>
+          
+        </section>
+      </article>
+    </main>
+    <aside>
+      <div id="test-api">
+        <h3>Try out the api here - check your browser console for the results</h3>
+        <form name="select" action="">
+          <label for="option">Select Table</label>
+          <select name="option" id="option">
+            <option selected value="invalid">Invalid</option>
+            <option value="sports">Sports</option>
+            <option value="matches">Matches</option>
+            <option value="poolResults">Pool Results</option>
+          </select>
+          <label for="sport">Select Sport</label>
+          <select name="sport">
+            <option value="" selected>Do not specify</option>
+            <option value="Men's Rugby Sevens">Men's Rugby Sevens</option>
+            <option value="Women's Rugby Sevens">Women's Rugby Sevens</option>
+            <option value="Netball">Netball</option>
+            <option value="invalid">invalid</option>
+          </select>
+          <button type="button" onclick="sendRequest(this.parentElement)">Submit</button>
+        </form>
+      </div>
+    </aside>
+    <footer>
+      <div id="copyright">&copy; 2018 | Created by <code>Chris Wordsworth</code> for the BSCE102 assignment at Ara in his second semester</div>
+    </footer>
+    <script>
+      var url = 'https://ubilamp.hopto.org/index.php'
+      
+      function startTime () {
+        var today = new Date()
+        var h = today.getHours()
+        var m = today.getMinutes()
+        var s = today.getSeconds()
+        m = checkTime(m)
+        s = checkTime(s)
+        document.getElementById('current-time').innerHTML = h + ':' + m + ':' + s
+        var t = setTimeout(startTime, 500)
+      }
+      
+      window.onload = startTime
+    </script>
+    <script src="responder.js"></script>
   </body>
 </html>
