@@ -18,14 +18,14 @@
   <body>
     <div id="divDisplay"></div>
     <script>
-    var the2018Games // GLOBAL FOR DEBUGGING
+      var the2018Games // GLOBAL FOR DEBUGGING
+      var url = 'https://ubilamp.hopto.org/index.php' // URL TO REQUEST TOURNAMENT DATA FROM
+
       var go = function () {
         the2018Games = Controller.setup()
         let theDisplay = document.getElementById( 'divDisplay')
-        addPoolResults(the2018Games)
-        addShortNames(the2018Games)
         theDisplay.innerHTML = ""
-        theDisplay.appendChild(the2018Games.getAll())
+        //theDisplay.appendChild(the2018Games.getAll())
         console.log( the2018Games ) 
       }
       window.onload = go;

@@ -7,11 +7,39 @@ class Sport { // eslint-disable-line no-unused-vars
     this.allMyTeams = []
     this.allMyPools = []
   }
-  addMatch (newYear, newMonth, newDay, newHour, newMinute, newPool, newTeamA, newTeamB) {
-    newPool = this.addTeam(newPool, newTeamA, newTeamB)
-    newTeamA = this.findTeam(newTeamA)
-    newTeamB = this.findTeam(newTeamB)
-    this.allMyMatches.push(new Match(new Date(newYear, newMonth, newDay, newHour, newMinute), newPool, newTeamA, newTeamB))
+  requestMatches () {
+    let payload = new FormData()
+    payload.append('option', 'matches')
+    payload.append('sport', this.name)
+    let myMatches = Controller.sendRequest(url, payload, this, 'addMatches') // Ask for matches, then add them to this sport
+  }
+  addMatches (myNewMatches) {
+    for (let aMatch of myNewMatches) {
+      let newPool = this.addTeam(aMatch.Pool, aMatch.TeamA, aMatch.TeamB)
+      let newTeamA = this.findTeam(aMatch.TeamA)
+      let newTeamB = this.findTeam(aMatch.TeamB)
+      this.allMyMatches.push(new Match(new Date(aMatch.Date), newPool, newTeamA, newTeamB))
+    }
+    this.requestMatchResults()
+  }
+  requestMatchResults () {
+    let payload = new FormData()
+    payload.append('option', 'poolResults')
+    payload.append('sport', this.name)
+    let myMatches = Controller.sendRequest(url, payload, this, 'addMatchResults') // Ask for match results, then add them to this sport
+  }
+  addMatchResults (myNewMatchResults) {
+    for (let aMatch of myNewMatchResults) {
+      /* JSON NUMBERS SEEM TO PARSE AS STRINGS... SOME CONVERSION IS REQUIRED */
+      let teamAScore = parseInt(aMatch.TeamA_Score)
+      let teamBScore = parseInt(aMatch.TeamB_Score)
+      this.findMatch(aMatch.TeamA, aMatch.TeamB).addResults(aMatch.TeamA, aMatch.TeamB, teamAScore, teamBScore)
+    }
+    // The following three lines are not neccessary, sorting will be done during getAll() when it is restored in the next iteration
+    // I included these lines for my sanity during testing
+    this.sort(`allMyPools`)
+    this.sort(`allMyTeams`)
+    this.sort(`allMyMatches`, `when`)
   }
   addTeam (newPool, ...newTeams) {
     let thisPool = this.addPool(newPool)
@@ -83,15 +111,8 @@ class Sport { // eslint-disable-line no-unused-vars
       return 0
     })
   }
-  addPoolResult (teamAName, teamBName, teamAScore, teamBScore) {
-    this.findMatch(teamAName, teamBName).addResults(teamAName, teamBName, teamAScore, teamBScore)
-  }
   findMatch (team1, team2) {
     return this.allMyMatches.find(aMatch => aMatch.hasTeam(team1) && aMatch.hasTeam(team2) && team1 !== team2)
-  }
-  addShortName (fullTeamName, newShortName) {
-    let theTeam = this.findTeam(fullTeamName)
-    theTeam.shortName = newShortName
   }
   getPoolRanking () {
     let result = ``
