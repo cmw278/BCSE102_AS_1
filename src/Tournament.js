@@ -4,11 +4,14 @@ class Tournament { // eslint-disable-line no-unused-vars
     this.name = newName
     this.allMySports = []
   }
-  addSport (newName, newVenue) {
-    this.allMySports.unshift(new Sport(newName, newVenue))
-    return this.allMySports[0]
+  addSports (allSports) {
+    for (let aSport of allSports) {
+      this.allMySports.unshift(new Sport(aSport.Name, aSport.Venue))
+      this.allMySports[0].requestMatches()
+    }
   }
   getAll () {
+    console.log('Getting All...')
     let result = document.createElement(`main`)
     let header = document.createElement(`h1`)
     header.innerHTML = this.name
@@ -17,12 +20,12 @@ class Tournament { // eslint-disable-line no-unused-vars
     result.appendChild(this.getPools())
     result.appendChild(this.getMatches())
     result.appendChild(this.getTeamMatches())
-//    result.appendChild(this.getParticipation())
     result.appendChild(this.getPoolResults())
     this.addSemiFinals('Netball', new Date(2018, 3, 14, 15, 0), new Date(2018, 3, 14, 17, 0))
     this.addSemiFinals(`Men's Rugby Sevens`, new Date(2018, 3, 15, 11, 45), new Date(2018, 3, 15, 12, 0))
     this.addSemiFinals(`Women's Rugby Sevens`, new Date(2018, 3, 15, 11, 0), new Date(2018, 3, 15, 11, 20))
     result.appendChild(this.getSemiFinalsMatches())
+    console.log('Got All?...')
     return result
   }
   getTeams () {
@@ -78,42 +81,6 @@ class Tournament { // eslint-disable-line no-unused-vars
     }
     return result
   }
-  /*
-  getParticipation () {
-    let result = []
-    let sportSets = this.allMySports.map(function (aSport) { return new Set(aSport.allMyTeams.map(function (aTeam) { return aTeam.name })) })
-    let globalSet = new Set().union(sportSets)
-    let difference = []
-    for (let i = 0; i < sportSets.length; i++) {
-      for (let j = i; j < sportSets.length; j++) {
-        //console.log(`${difference} --- ${sportSets[j]}`)
-        //console.log(difference, sportSets[j])
-        console.log(globalSet.intersect(more, sportSets[j]))
-      }
-      difference.push(sportSets[i])
-      //console.log(difference)
-    }
-    /*
-    let result = `<h3>Team Participation</h3>`
-    let sportSets = this.allMySports.map(function (aSport) { return new Set(aSport.allMyTeams.map(function (aTeam) { return aTeam.name })) })
-    let participation = []
-    participation.push([`Teams in all</br>3 sports`, ``])
-    sportSets[0].intersect(sportSets[1], sportSets[2]).forEach(function (aTeam) { participation.push([``, aTeam]) })
-    participation.push([``, ``], [`Teams in Netball</br>and Mens 7's`, ``])
-    sportSets[0].intersect(sportSets[1]).difference(sportSets[2]).forEach(function (aTeam) { participation.push([``, aTeam]) })
-    participation.push([``, ``], [`Teams in Netball</br>and Womens 7's`, ``])
-    sportSets[1].intersect(sportSets[2]).difference(sportSets[0]).forEach(function (aTeam) { participation.push([``, aTeam]) })
-    participation.push([``, ``], [`Teams in Womens 7's</br>and Mens 7's`, ``])
-    sportSets[2].intersect(sportSets[0]).difference(sportSets[1]).forEach(function (aTeam) { participation.push([``, aTeam]) })
-    participation.push([``, ``], [`Teams in Netball only`, ``])
-    sportSets[1].difference(sportSets[0], sportSets[2]).forEach(function (aTeam) { participation.push([``, aTeam]) })
-    participation.push([``, ``], [`Teams in Mens 7's only`, ``])
-    sportSets[0].difference(sportSets[1], sportSets[2]).forEach(function (aTeam) { participation.push([``, aTeam]) })
-    participation.push([``, ``], [`Teams in Womens 7's only`, ``])
-    sportSets[2].difference(sportSets[1], sportSets[0]).forEach(function (aTeam) { participation.push([``, aTeam]) })
-    return result + View.makeTable(participation)
-    */
-//  }
   sort (dataBase, sortByValue = `name`) {
     this[dataBase].sort(function (a, b) {
       if (a[sortByValue] < b[sortByValue]) {
@@ -135,12 +102,6 @@ class Tournament { // eslint-disable-line no-unused-vars
       result.appendChild(aSport.getResultsTables())
     }
     return result
-    /*
-    let result = ``
-    this.sort(`allMySports`)
-    this.allMySports.map(function (aSport) { result += `<h3>${aSport.name} Pool Play Results</h3>${aSport.getResultsTables()}` })
-    return result
-    */
   }
   getPoolRanking () {
     let result = ``
